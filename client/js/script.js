@@ -88,6 +88,8 @@ document.addEventListener("click", () => {
   emojiPicker.style.display = "none";
 });
 
+const API_BASE_URL = "https://chat-x-2-3.onrender.com"; // Your deployed Python service URL
+
 window.onload = async function () {
   username = localStorage.getItem("username");
   const password = localStorage.getItem("password");
@@ -101,7 +103,7 @@ window.onload = async function () {
   document.querySelector(".welcome").textContent = `Welcome, ${username}`;
 
   try {
-    const res = await fetch(`/login`, {
+    const res = await fetch(`${API_BASE_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
