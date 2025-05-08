@@ -88,7 +88,7 @@ document.addEventListener("click", () => {
   emojiPicker.style.display = "none";
 });
 
-const API_BASE_URL = "https://chat-x-2-3.onrender.com"; // Your deployed Python service URL
+const API_BASE_URL = window.location.origin; // ✅ auto-adapts based on where index.html is loaded from // Your deployed Python service URL
 
 window.onload = async function () {
   username = localStorage.getItem("username");
@@ -122,7 +122,7 @@ window.onload = async function () {
 };
 
 function connectWebSocket() {
-  socket = new WebSocket("ws://localhost:8000");
+  socket = new WebSocket("wss://chat-x-2-3.onrender.com");
 
   socket.onopen = () => {
     socket.send(JSON.stringify({ type: "connect", username, token: authToken }));
