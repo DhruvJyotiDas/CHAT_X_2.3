@@ -179,7 +179,7 @@ wss.on("connection", (ws) => {
     else if (message.type === "message") {
       // Call Python API for spam/abuse prediction
       try {
-        const response = await axios.post('https://chat-x-2-3.onrender.com/predict', { message: message.message });
+        const response = await axios.post('https://chat-x-2-3-1.onrender.com/predict', { message: message.message });
         if (response.data.prediction === 'spam') {
           ws.send(JSON.stringify({ type: "error", message: "Message detected as spam or abuse and was blocked." }));
           return;
