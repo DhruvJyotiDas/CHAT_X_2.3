@@ -191,13 +191,13 @@ async function handleSocketMessage(event) {
             };
           }
 
-          try {
-            const res = await fetch(`/history?user=${username}&peer=${user}`);
-            const messages = await res.json();
-            messages.forEach(renderMessage);
-          } catch (err) {
-            console.error("History fetch error:", err);
-          }
+  try {
+    const res = await fetch(`${API_BASE_URL}/history?user=${username}&peer=${user}`);
+    const messages = await res.json();
+    messages.forEach(renderMessage);
+  } catch (err) {
+    console.error("History fetch error:", err);
+  }
         };
         container.appendChild(el);
       }
@@ -589,7 +589,7 @@ async function handleSocketMessage(event) {
           document.getElementById("chat-box").innerHTML = "";
 
           try {
-            const res = await fetch(`/history?user=${username}&peer=${user}`);
+            const res = await fetch(`${API_BASE_URL}/history?user=${username}&peer=${user}`);
             const messages = await res.json();
             messages.forEach(renderMessage);
           } catch (err) {
