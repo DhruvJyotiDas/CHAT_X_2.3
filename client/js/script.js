@@ -122,7 +122,7 @@ window.onload = async function () {
 };
 
 function connectWebSocket() {
-  socket = new WebSocket("wss://chat-x-2-3.onrender.com");
+  socket = new WebSocket("wss://chat-x-2-3-1.onrender.com");
 
   socket.onopen = () => {
     socket.send(JSON.stringify({ type: "connect", username, token: authToken }));
