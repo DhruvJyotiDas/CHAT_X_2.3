@@ -17,7 +17,7 @@
                 .catch(e => console.error('JS fetch error:', e));
             
             // Test WebSocket connection
-            const ws = new WebSocket('ws://localhost:8000');
+            const ws = new WebSocket('wss://chat-x-2-3.onrender.com');
             ws.onopen = () => console.log('WebSocket connected');
             ws.onerror = (e) => console.error('WebSocket error:', e);
         }
