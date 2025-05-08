@@ -16,72 +16,14 @@ const axios = require('axios');
 
 const { createProxyMiddleware } = require('http-proxy-middleware'); // 🔁 NEW: Proxy for Python AI
 
-/*
-// Add body parsing middleware for JSON and URL-encoded data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// 🔁 Add this proxy to forward /summarize requests to FastAPI backend
-
-
-// ✅ Register proxy before static routes
-app.use('/summarize', (req, res, next) => {
-  console.log(`🔁 Proxying summarize request: ${req.method} ${req.originalUrl}`);
-  next();
-}, createProxyMiddleware({
-  target: 'https://edea-2401-4900-6326-adea-9546-79e8-7057-cca8.ngrok-free.app',
-  changeOrigin: true,
-}));
-*/
+// Enable CORS for all origins
+app.use(cors());
 
 // Add body parsing middleware for JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const GEMINI_API_KEY = 'AIzaSyBWSUg8x3ljYqXabdHLMyzJSZeAuDWmIgk';
-app.post('/summarize', async (req, res) => {
-  const { text } = req.body;
-  if (!text) return res.status(400).json({ error: 'Text is required' });
-
-  const prompt = `Summarize the following text:\n\n${text}`;
-
-  try {
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        contents: [
-          {
-            parts: [{ text: prompt }]
-          }
-        ]
-      },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-
-    // Fix summary extraction: Gemini API returns 'candidates' array with 'content' as string or object
-    let summary = text;
-    if (response.data && Array.isArray(response.data.candidates) && response.data.candidates.length > 0) {
-      const candidate = response.data.candidates[0];
-      if (typeof candidate.content === 'string') {
-        summary = candidate.content;
-      } else if (typeof candidate.content === 'object' && Array.isArray(candidate.content.parts)) {
-        // Concatenate all text parts
-        summary = candidate.content.parts.map(part => part.text).join('');
-      } else if (typeof candidate.content === 'object' && candidate.content.text) {
-        summary = candidate.content.text;
-      } else {
-        summary = JSON.stringify(candidate.content);
-      }
-    }
-    res.json({ summary });
-  } catch (error) {
-    console.error('Gemini API error:', error);
-    res.status(500).json({ error: 'Failed to generate summary' });
-  }
-});
-
 app.post('/summarize', async (req, res) => {
   const { text } = req.body;
   if (!text) return res.status(400).json({ error: 'Text is required' });
