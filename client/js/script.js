@@ -9,12 +9,13 @@ const configuration = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     {
-      urls: 'turn:serveo.net:3478',
+      urls: 'turn:185.186.76.204:3478',
       username: 'test',
       credential: 'password'
     }
   ]
 };
+
 
 
 // DOM Elements
