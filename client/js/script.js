@@ -7,16 +7,15 @@ let peerConnection;
 
 const configuration = {
   iceServers: [
-    {
-      urls: 'stun:stun.l.google.com:19302'
-    },
+    { urls: 'stun:stun.l.google.com:19302' },
     {
       urls: 'turn:serveo.net:3478',
-      username: 'user',
-      credential: 'pass'
+      username: 'test',
+      credential: 'password'
     }
   ]
 };
+
 
 // DOM Elements
 const callBtn = document.getElementById("call-btn");
