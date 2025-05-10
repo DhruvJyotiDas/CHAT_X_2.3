@@ -467,7 +467,7 @@ function stopDrag() {
 
 function startJitsiCall(caller = username) {
   const participants = [caller, selectedRecipient].sort().join('-');
-  const roomName = `ChatX-${participants}`.replace(/[^a-zA-Z0-9]/g, '');
+  const roomName = "ChatXTest12345";
   const domain = "meet.jit.si";
   const options = {
     roomName: roomName,
@@ -505,7 +505,6 @@ function startJitsiCall(caller = username) {
       enableScreenshotCapture: false,
       enableRemoteControl: false,
       enableRecording: false,
-      enableWelcomePage: false,
       prejoinPageEnabled: false,
       lobbyEnabled: false,
       disableLobby: true,
