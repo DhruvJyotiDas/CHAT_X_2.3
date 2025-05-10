@@ -466,8 +466,9 @@ function stopDrag() {
 }
 
 function startJitsiCall(caller = username) {
+  const uniqueSuffix = Math.random().toString(36).substring(2, 8); // safe random letters
   const participants = [caller, selectedRecipient].sort().join('-');
-  const roomName = "ChatXTest12345";
+  const roomName = `chatxroom-${participants}-${uniqueSuffix}`.replace(/[^a-zA-Z0-9]/g, '');
   const domain = "meet.jit.si";
   const options = {
     roomName: roomName,
