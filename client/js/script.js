@@ -468,8 +468,8 @@ function stopDrag() {
 function startJitsiCall(caller = username) {
   // ✅ Always generate a unique room name to avoid 'membersOnly' errors
   const participants = [caller, selectedRecipient].sort().join('-');
-  const timestamp = Date.now(); // ensure uniqueness
-  const roomName = `chatx-${participants}-${timestamp}`.replace(/[^a-zA-Z0-9]/g, '');
+  const roomName = `chatx-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 10)}`;
+
 
   const domain = "meet.jit.si";
   const options = {
