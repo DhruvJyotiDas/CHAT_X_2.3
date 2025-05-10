@@ -466,23 +466,20 @@ function stopDrag() {
 }
 
 function startJitsiCall(caller = username) {
-  const uniqueSuffix = Math.random().toString(36).substring(2, 8); // safe random letters
+  // ✅ Generate a safe, unique room name
   const participants = [caller, selectedRecipient].sort().join('-');
-  const roomName = `chatxroom-${participants}-${uniqueSuffix}`.replace(/[^a-zA-Z0-9]/g, '');
+  const base = `chatx-${participants}`.replace(/[^a-zA-Z0-9]/g, '');
+  const roomName = `${base}-${Date.now().toString(36)}`;  // Makes it globally unique
+
   const domain = "meet.jit.si";
   const options = {
     roomName: roomName,
     parentNode: document.getElementById("jitsi-container"),
     width: "100%",
     height: 400,
-    // Remove userInfo to avoid authentication requirement message
-    // userInfo: {
-    //   displayName: username
-    // },
     configOverwrite: {
       startWithVideoMuted: false,
       startWithAudioMuted: false,
-      // Hide watermarks and branding to reduce ads
       disableDeepLinking: true,
       hideConferenceSubject: true,
       hideInviteMoreHeader: true,
@@ -516,13 +513,19 @@ function startJitsiCall(caller = username) {
       TOOLBAR_BUTTONS: ['microphone', 'hangup']
     }
   };
+
   jitsiApi = new JitsiMeetExternalAPI(domain, options);
-  videoPopup.classList.remove("hidden");
+
+  // Show UI
+  document.getElementById("video-popup").classList.remove("hidden");
   muteBtn.style.display = "inline-block";
   endCallBtn.style.display = "inline-block";
   callBtn.style.display = "none";
   incomingCallPopup.classList.add("hidden");
+
+  console.log(`✅ Jitsi room created: ${roomName}`);
 }
+
 
 endCallBtn?.addEventListener("click", () => {
   if (jitsiApi) {
