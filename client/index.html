@@ -11,11 +11,19 @@
       z-index: 9999 !important;
       background-color: rgba(0, 0, 0, 0.9);
     }
-    #jitsi-container {
-      width: 100%;
-      height: 400px;
+    video {
+      width: 45%;
+      max-height: 300px;
       border-radius: 10px;
-      overflow: hidden;
+      background-color: black;
+      margin: 5px;
+    }
+    #video-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -46,6 +54,11 @@
 
       <div class="chat-box" id="chat-box"></div>
       <div class="typing-indicator" id="typing-indicator"></div>
+
+      <div id="video-container">
+        <video id="local-video" autoplay muted></video>
+        <video id="remote-video" autoplay></video>
+      </div>
 
       <div class="message-input">
         <input type="text" id="message" placeholder="Type a message..." />
@@ -118,18 +131,6 @@
     </div>
   </template>
 
-  <!-- Jitsi Video Call Popup -->
-  <div id="video-popup" class="video-popup hidden">
-    <div class="video-box">
-      <div id="jitsi-container"></div>
-      <div class="call-controls">
-        <button id="mute-btn" class="mute-call">🔇</button>
-        <button id="end-call-btn" class="end-call">❌</button>
-      </div>
-    </div>
-    <div id="resize-handle"></div>
-  </div>
-
   <!-- Incoming Call UI -->
   <div id="incoming-call-popup" class="video-popup hidden">
     <div class="video-box" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
@@ -141,7 +142,7 @@
     </div>
   </div>
 
-  <script src="https://meet.jit.si/external_api.js"></script>
+  <!-- Removed Jitsi external_api.js script -->
   <script src="/js/script.js"></script>
 </body>
 </html>
