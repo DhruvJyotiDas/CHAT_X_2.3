@@ -283,6 +283,53 @@ endCallBtn.addEventListener("click", () => {
   callBtn.style.display = "inline-block";
 });
 
+// Mute button functionality
+const muteBtn = document.getElementById("mute-btn");
+let isMuted = false;
+
+muteBtn.addEventListener("click", () => {
+  if (!localStream) return;
+  isMuted = !isMuted;
+  localStream.getAudioTracks().forEach(track => {
+    track.enabled = !isMuted;
+  });
+  muteBtn.textContent = isMuted ? "Unmute" : "Mute";
+});
+
+// Draggable video call UI
+const videoCallUI = document.querySelector(".video-call-ui");
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let initialX = 0;
+let initialY = 0;
+
+videoCallUI.addEventListener("mousedown", (e) => {
+  if (e.target === muteBtn || e.target === endCallBtn) return; // Ignore clicks on buttons
+  isDragging = true;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  const rect = videoCallUI.getBoundingClientRect();
+  initialX = rect.left;
+  initialY = rect.top;
+  videoCallUI.style.transition = "none";
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+  const deltaX = e.clientX - dragStartX;
+  const deltaY = e.clientY - dragStartY;
+  videoCallUI.style.left = initialX + deltaX + "px";
+  videoCallUI.style.top = initialY + deltaY + "px";
+});
+
+document.addEventListener("mouseup", () => {
+  if (isDragging) {
+    isDragging = false;
+    videoCallUI.style.transition = "";
+  }
+});
+
 callBtn.onclick = () => {
   if (!selectedRecipient) return alert("Select a user first.");
   socket.send(JSON.stringify({
