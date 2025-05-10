@@ -466,10 +466,10 @@ function stopDrag() {
 }
 
 function startJitsiCall(caller = username) {
-  // ✅ Generate a safe, unique room name
+  // ✅ Always generate a unique room name to avoid 'membersOnly' errors
   const participants = [caller, selectedRecipient].sort().join('-');
-  const base = `chatx-${participants}`.replace(/[^a-zA-Z0-9]/g, '');
-  const roomName = `${base}-${Date.now().toString(36)}`;  // Makes it globally unique
+  const timestamp = Date.now(); // ensure uniqueness
+  const roomName = `chatx-${participants}-${timestamp}`.replace(/[^a-zA-Z0-9]/g, '');
 
   const domain = "meet.jit.si";
   const options = {
@@ -477,54 +477,29 @@ function startJitsiCall(caller = username) {
     parentNode: document.getElementById("jitsi-container"),
     width: "100%",
     height: 400,
+    // ✅ Clean config - avoids authentication and branding
     configOverwrite: {
       startWithVideoMuted: false,
       startWithAudioMuted: false,
       disableDeepLinking: true,
-      hideConferenceSubject: true,
-      hideInviteMoreHeader: true,
-      hideJitsiWatermark: true,
-      hideLogo: true,
-      hideRecordingLabel: true,
-      hideShareAudioHelper: true,
-      hideShareVideoHelper: true,
-      hideTileView: false,
-      disableInviteFunctions: true,
-      disableModeratorIndicator: true,
-      disableProfile: true,
-      disableRemoteMute: true,
-      disableSelfView: false,
-      disableThirdPartyRequests: true,
-      enableNoAudioDetection: false,
-      enableNoisyMicDetection: false,
-      enableWelcomePage: false,
-      enableClosePage: false,
-      enableLobbyMode: false,
-      enableScreenshotCapture: false,
-      enableRemoteControl: false,
-      enableRecording: false,
       prejoinPageEnabled: false,
-      lobbyEnabled: false,
-      disableLobby: true,
-      toolbarButtons: ['microphone', 'hangup', 'mute-everyone', 'camera', 'chat', 'raisehand', 'tileview', 'fullscreen'],
+      enableWelcomePage: false
     },
     interfaceConfigOverwrite: {
       DEFAULT_REMOTE_DISPLAY_NAME: "Fellow ChatX User",
-      TOOLBAR_BUTTONS: ['microphone', 'hangup']
+      TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'chat', 'tileview']
     }
   };
 
   jitsiApi = new JitsiMeetExternalAPI(domain, options);
 
-  // Show UI
-  document.getElementById("video-popup").classList.remove("hidden");
+  videoPopup.classList.remove("hidden");
   muteBtn.style.display = "inline-block";
   endCallBtn.style.display = "inline-block";
   callBtn.style.display = "none";
   incomingCallPopup.classList.add("hidden");
-
-  console.log(`✅ Jitsi room created: ${roomName}`);
 }
+
 
 
 endCallBtn?.addEventListener("click", () => {
