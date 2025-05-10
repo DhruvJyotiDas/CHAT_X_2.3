@@ -526,6 +526,59 @@ video {
   display: none;
 }
 
+/* New styles for video call UI container */
+.video-call-ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  background-color: #1a1a1a;
+  border: 2px solid #eaff00;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 0 15px rgba(234, 255, 0, 0.7);
+  max-width: 90vw;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.video-call-ui #video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex: 1;
+}
+
+.video-call-ui video {
+  width: 48%;
+  max-height: 350px;
+  border-radius: 10px;
+  background-color: black;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(234, 255, 0, 0.7);
+}
+
+#end-call-btn {
+  padding: 0.5rem 1rem;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.7);
+  transition: background-color 0.3s ease;
+}
+
+#end-call-btn:hover {
+  background-color: #ff1a1a;
+  box-shadow: 0 0 15px rgba(255, 26, 26, 0.9);
+}
+
 #resize-handle {
   width: 20px;
   height: 20px;
