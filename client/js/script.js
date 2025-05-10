@@ -7,14 +7,17 @@ let peerConnection;
 
 const configuration = {
   iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
     {
-      urls: 'turn:100.86.67.82:3478?transport=tcp',
+      urls: 'stun:100.86.67.82:3478'
+    },
+    {
+      urls: 'turn:100.86.67.82:3478',
       username: 'test',
       credential: 'password'
     }
   ]
 };
+
 
 
 
