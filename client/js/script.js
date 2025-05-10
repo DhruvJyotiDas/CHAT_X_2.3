@@ -204,20 +204,6 @@ async function handleSocketMessage(event) {
     });
   }
 
-  else if (data.type === "jitsi-call") {
-    incomingCallPopup.classList.remove("hidden");
-    incomingCallText.textContent = `${data.from} is calling you...`;
-
-    acceptCallBtn.onclick = () => {
-      incomingCallPopup.classList.add("hidden");
-      startJitsiCall(data.from);
-    };
-
-    declineCallBtn.onclick = () => {
-      incomingCallPopup.classList.add("hidden");
-    };
-  }
-
   else if (data.type === "message") {
     updateEmoji(data.mood);
     renderMessage(data);
@@ -446,7 +432,6 @@ function resizeMouseMove(e) {
   videoPopup.style.width = Math.max(newWidth, 300) + "px";
   videoPopup.style.height = Math.max(newHeight, 200) + "px";
   if (jitsiApi) {
-    jitsiApi.resize();
   }
 }
 
@@ -483,7 +468,8 @@ function stopDrag() {
 }
 
 function startJitsiCall(caller = username) {
-  const roomName = `ChatX-${caller}-${selectedRecipient}`.replace(/\W/g, '');
+  const participants = [caller, selectedRecipient].sort().join('-');
+  const roomName = `ChatX-${participants}`.replace(/\W/g, '');
   const domain = "meet.jit.si";
   const options = {
     roomName: roomName,
