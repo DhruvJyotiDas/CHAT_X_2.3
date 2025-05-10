@@ -297,7 +297,6 @@ muteBtn.addEventListener("click", () => {
 });
 
 // Draggable video call UI
-const videoCallUI = document.querySelector(".video-call-ui");
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
