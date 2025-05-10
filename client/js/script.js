@@ -431,7 +431,7 @@ function resizeMouseMove(e) {
   const newHeight = resizeStartHeight + (e.clientY - resizeStartY);
   videoPopup.style.width = Math.max(newWidth, 300) + "px";
   videoPopup.style.height = Math.max(newHeight, 200) + "px";
-  
+}
 
 function stopResize() {
   isResizing = false;
