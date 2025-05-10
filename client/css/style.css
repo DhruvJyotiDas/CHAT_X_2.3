@@ -541,6 +541,14 @@ video {
   max-width: 90vw;
   max-height: 400px;
   overflow: hidden;
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  width: 500px;
+  height: 400px;
+  resize: both;
+  cursor: move;
+  z-index: 10000;
 }
 
 .video-call-ui #video-container {
@@ -550,6 +558,7 @@ video {
   gap: 10px;
   width: 100%;
   flex: 1;
+  position: relative;
 }
 
 .video-call-ui video {
@@ -561,17 +570,40 @@ video {
   box-shadow: 0 0 10px rgba(234, 255, 0, 0.7);
 }
 
-#end-call-btn {
-  padding: 0.5rem 1rem;
-  background-color: #ff4d4d;
-  color: white;
+#video-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+#mute-btn, #end-call-btn {
+  padding: 0.3rem 0.6rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.9rem;
-  box-shadow: 0 0 10px rgba(255, 77, 77, 0.7);
+  font-size: 0.8rem;
+  box-shadow: 0 0 8px #ffd700;
   transition: background-color 0.3s ease;
+}
+
+#mute-btn {
+  background-color: #ffd700;
+  color: #1c2526;
+}
+
+#mute-btn:hover {
+  background-color: #ffea00;
+  box-shadow: 0 0 12px #ffea00;
+}
+
+#end-call-btn {
+  background-color: #ff4d4d;
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.7);
 }
 
 #end-call-btn:hover {
