@@ -34,12 +34,23 @@
     <div class="welcome">Welcome, <span id="user-greeting">User</span></div>
   </div>
 
-  <div class="chat-wrapper">
-    <div class="sidebar">
-      <input type="text" id="user-search" placeholder="Search users..." />
-      <div id="user-items-container"></div>
+  <main class="dashboard">
+    <div class="rules-container">
+      <h3>Greetings, Traveler!</h3>
+      <p>Before you connect, remember the sacred scrolls:</p>
+      <ul>
+        <li>Rule #1: Be excellent to each other.</li>
+        <li>Rule #2: Sarcasm is a spice, not the main course.</li>
+        <li>Rule #3: Share memes, not drama.</li>
+      </ul>
     </div>
+    <h2 class="dashboard-title">Online Users</h2>
+    <div class="user-grid" id="user-grid">
+      <!-- User cards will be injected here by script.js -->
+    </div>
+  </main>
 
+  <div class="chat-modal hidden" id="chat-modal">
     <div class="chat-area">
       <div class="chat-header">
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -47,32 +58,49 @@
           <span id="live-emoji" style="font-size: 1.5rem;">😐</span>
         </div>
         <div class="chat-controls">
-          <button id="call-btn" title="Call 📞">📞</button>
+          <button id="voice-call-btn" title="Voice Call">🎤</button>
+          <button id="video-call-btn" title="Video Call">📹</button>
+          <button id="close-chat-btn" title="Close Chat">✖</button>
         </div>
-        <span class="status-indicator"></span>
       </div>
 
       <div class="chat-box" id="chat-box"></div>
       <div class="typing-indicator" id="typing-indicator"></div>
 
-      <div class="video-call-ui" style="display:none; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px; position: fixed; top: 100px; left: 100px; width: 500px; height: 400px; background-color: #1a1a1a; border: 2px solid #eaff00; border-radius: 10px; box-shadow: 0 0 15px rgba(234, 255, 0, 0.7); resize: both; overflow: hidden; cursor: move; z-index: 10000;">
-        <div id="video-container" style="display: flex; justify-content: center; align-items: center; gap: 10px; flex: 1; position: relative;">
-<video id="local-video" autoplay muted></video>
-          <video id="remote-video" autoplay style="width: 48%; max-height: 350px; border-radius: 10px; background-color: black; object-fit: cover; box-shadow: 0 0 10px rgba(234, 255, 0, 0.7);"></video>
-          <div id="video-controls" style="position: absolute; bottom: 10px; right: 10px; display: flex; gap: 10px; z-index: 10;">
-            <button id="mute-btn" title="Mute/Unmute" style="padding: 0.3rem 0.6rem; background-color: #ffd700; border: none; border-radius: 6px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 0.8rem; box-shadow: 0 0 8px #ffd700;">Mute</button>
-            <button id="end-call-btn" title="End Call" style="padding: 0.3rem 0.6rem; background-color: #ff4d4d; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 0.8rem; box-shadow: 0 0 10px rgba(255, 77, 77, 0.7);">End Call</button>
-          </div>
-        </div>
-      </div>
-
       <div class="message-input">
         <input type="text" id="message" placeholder="Type a message..." />
         <button id="emoji-btn">😊</button>
-        <button id="attachment-btn">📎</button>
         <button id="send-btn">Send</button>
       </div>
+    </div>
   </div>
+
+  <div id="notification-container"></div>
+
+  <template id="user-card-template">
+    <div class="user-card">
+      <img src="images/bot-icon.png" alt="User Icon" class="user-icon">
+      <div class="user-name"></div>
+      <div class="status-indicator"></div>
+    </div>
+  </template>
+
+  <div class="video-call-ui" style="display:none;">
+      <div id="video-container">
+        <div class="video-wrapper">
+          <video id="local-video" autoplay muted></video>
+          <div id="local-video-username" class="video-username"></div>
+        </div>
+        <div class="video-wrapper">
+          <video id="remote-video" autoplay></video>
+          <div id="remote-video-username" class="video-username"></div>
+        </div>
+      </div>
+      <div id="video-controls">
+        <button id="mute-btn" title="Mute/Unmute">🔇</button>
+        <button id="end-call-btn" title="End Call">✖</button>
+      </div>
+    </div>
   </div>
 
   <div id="notification-container"></div>

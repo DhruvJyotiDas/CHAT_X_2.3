@@ -22,8 +22,9 @@ const configuration = {
 
 
 
+const userIcons = ['images/bot-icon.png', 'images/group-icon.png'];
+
 // DOM Elements
-const callBtn = document.getElementById("call-btn");
 const incomingCallPopup = document.getElementById("incoming-call-popup");
 const incomingCallText = document.getElementById("incoming-call-text");
 const acceptCallBtn = document.getElementById("accept-call-btn");
@@ -78,8 +79,8 @@ document.addEventListener("click", () => emojiPicker.style.display = "none");
 const API_BASE_URL = window.location.origin;
 
 window.onload = async function () {
-  username = localStorage.getItem("username");
-  const password = localStorage.getItem("password");
+  username = sessionStorage.getItem("username");
+  const password = sessionStorage.getItem("password");
 
   if (!username || !password) {
     alert("Login info not found. Redirecting to login page.");
@@ -108,9 +109,13 @@ window.onload = async function () {
 };
 
 function connectWebSocket() {
-  socket = new WebSocket("wss://chat-x-2-3-1.onrender.com");
+  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+  const wsUrl = `${protocol}://${window.location.host}`;
+  console.log(`Connecting to WebSocket at: ${wsUrl}`);
+  socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
+    console.log("WebSocket connection established.");
     socket.send(JSON.stringify({ type: "connect", username, token: authToken }));
   };
 
@@ -140,30 +145,47 @@ function connectWebSocket() {
 
 async function handleSocketMessage(event) {
   const data = JSON.parse(event.data);
+  const chatModal = document.getElementById('chat-modal');
+  const userGrid = document.getElementById('user-grid');
+  const userCardTemplate = document.getElementById('user-card-template');
+
   if (data.type === "updateUsers") {
-    const container = document.getElementById("user-items-container");
-    container.innerHTML = "";
+    console.log("Received user list:", data.users);
+    userGrid.innerHTML = ""; // Clear existing users
     data.users.forEach(user => {
       if (user !== username) {
-        const el = document.createElement("div");
-        el.className = "user-item";
-        el.textContent = user;
-        el.onclick = async () => {
+        const card = userCardTemplate.content.cloneNode(true);
+        card.querySelector('.user-name').textContent = user;
+        // Randomize user icon
+        const randomIcon = userIcons[Math.floor(Math.random() * userIcons.length)];
+        card.querySelector('.user-icon').src = randomIcon;
+        
+        card.querySelector('.user-card').onclick = async () => {
           selectedRecipient = user;
-          document.getElementById("chat-title").textContent = user;
-          document.getElementById("chat-box").innerHTML = "";
+          document.getElementById('chat-title').textContent = `Chat with ${user}`;
+          document.getElementById('chat-box').innerHTML = "";
+          
+          // Fetch chat history
           const res = await fetch(`${API_BASE_URL}/history?user=${username}&peer=${user}`);
           const messages = await res.json();
           messages.forEach(renderMessage);
+
+          chatModal.classList.remove('hidden');
         };
-        container.appendChild(el);
+        userGrid.appendChild(card);
       }
     });
   }
 
-  else if (data.type === "call-request") {
+  // Close chat modal
+  document.getElementById('close-chat-btn').onclick = () => {
+    chatModal.classList.add('hidden');
+    selectedRecipient = null;
+  };
+
+  if (data.type === "call-request") {
     incomingCallPopup.classList.remove("hidden");
-    incomingCallText.textContent = `${data.from} is calling you...`;
+    incomingCallText.textContent = `${data.from} is starting a ${data.callType} call...`;
 
     acceptCallBtn.onclick = async () => {
       incomingCallPopup.classList.add("hidden");
@@ -172,7 +194,7 @@ async function handleSocketMessage(event) {
         from: username,
         to: data.from
       }));
-      await startWebRTCCall(true);
+      await startWebRTCCall(true, data.callType);
     };
 
     declineCallBtn.onclick = () => {
@@ -182,12 +204,11 @@ async function handleSocketMessage(event) {
         from: username,
         to: data.from
       }));
-      callBtn.style.display = "inline-block";
     };
   }
 
   else if (data.type === "call-accepted") {
-    await startWebRTCCall(false);
+    await startWebRTCCall(false, data.callType);
   }
 
   else if (data.type === "call-offer") {
@@ -225,9 +246,16 @@ async function handleSocketMessage(event) {
   }
 }
 
-async function startWebRTCCall(isCaller) {
+async function startWebRTCCall(isCaller, callType) {
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    document.getElementById('local-video-username').textContent = username;
+    document.getElementById('remote-video-username').textContent = selectedRecipient;
+
+    const constraints = {
+      video: callType === 'video',
+      audio: true
+    };
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
     localVideo.srcObject = localStream;
 
     peerConnection = new RTCPeerConnection(configuration);
@@ -263,8 +291,6 @@ async function startWebRTCCall(isCaller) {
     }
 
     videoCallUI.style.display = "flex";
-    callBtn.style.display = "none";
-
   } catch (err) {
     console.error("WebRTC call error:", err);
   }
@@ -280,7 +306,6 @@ endCallBtn.addEventListener("click", () => {
   localVideo.srcObject = null;
   remoteVideo.srcObject = null;
   videoCallUI.style.display = "none";
-  callBtn.style.display = "inline-block";
 });
 
 // Mute button functionality
@@ -329,15 +354,19 @@ document.addEventListener("mouseup", () => {
   }
 });
 
-callBtn.onclick = () => {
-  if (!selectedRecipient) return alert("Select a user first.");
-  socket.send(JSON.stringify({
-    type: "call-request",
-    from: username,
-    to: selectedRecipient
-  }));
-  callBtn.style.display = "none";
-};
+function initiateCall(callType) {
+    if (!selectedRecipient) return alert("Select a user first.");
+    socket.send(JSON.stringify({
+        type: "call-request",
+        from: username,
+        to: selectedRecipient,
+        callType: callType
+    }));
+}
+
+document.getElementById('voice-call-btn').onclick = () => initiateCall('audio');
+document.getElementById('video-call-btn').onclick = () => initiateCall('video');
+
 
 function updateEmoji(mood) {
   const emojiMap = { happy: "😄", sad: "😢", angry: "😠", neutral: "😐" };

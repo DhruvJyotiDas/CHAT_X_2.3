@@ -280,6 +280,7 @@ wss.on("connection", (ws) => {
 
 function broadcastUserList() {
   const users = Object.keys(clients);
+  console.log(`Broadcasting user list to all clients: ${users.join(', ')}`); // DEBUGGING
   const msg = JSON.stringify({ type: "updateUsers", users });
   for (let user in clients) {
     if (clients[user].readyState === WebSocket.OPEN) {
