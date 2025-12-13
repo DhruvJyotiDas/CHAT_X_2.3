@@ -13,6 +13,7 @@
     "http-proxy-middleware": "^2.0.6",
     "mongoose": "^7.3.1",
     "sentiment": "^5.0.2",
-    "ws": "^8.13.0"
+    "ws": "^8.13.0",
+    "socket.io": "^4.7.5"
   }
 }
